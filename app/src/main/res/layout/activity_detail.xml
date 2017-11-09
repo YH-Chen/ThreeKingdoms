@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.chan.kingdom3.detail"
+android:orientation="vertical">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    android:background="@color/grey">
+    <ImageView
+        android:id="@+id/image_detail"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:src="@drawable/liubei"/>
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/back"
+        android:background="#00000000"/>
+    <TextView
+        android:id="@+id/goods_name"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_alignLeft="@id/back_button"
+        android:text="Ferror Rocher"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+    <ImageButton
+        android:id="@+id/Star"
+        android:tag="0"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/goods_name"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/empty_star"
+        android:background="#00000000"/>
+</RelativeLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="2"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/price_in_detail"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:text="￥132.59"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:text="重量"
+                android:textSize="20dp"
+                android:textColor="#8A000000"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+        <View
+            android:layout_width="1dip"
+            android:layout_height="40dp"
+            android:background="@color/grey"
+            android:layout_gravity="center"/>
+        <ImageButton
+            android:id="@+id/shopping"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/shoplist"
+            android:scaleType="centerInside"
+            android:backgroundTint="@color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="350dp"
+        android:layout_height="1dip"
+        android:background="@color/grey"
+        android:layout_gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="更多产品信息"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+</LinearLayout>
+<View
+    android:layout_width="match_parent"
+    android:layout_height="30px"
+    android:background="@color/grey"/>
+<ListView
+    android:id="@+id/more"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="4"></ListView>
+
+</LinearLayout>

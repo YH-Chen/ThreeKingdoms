@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Kingdom3</string>
+    <string name="title_activity_detail">detail</string>
+    <string name="appwidget_text">当前没有任何信息</string>
+    <string name="add_widget">Add widget</string>
+    <string-array name="charater_names">
+        <item>刘备</item>
+        <item>关羽</item>
+        <item>张飞</item>
+        <item>诸葛亮</item>
+        <item>赵云</item>
+        <item>曹操</item>
+        <item>孙权</item>
+        <item>司马懿</item>
+        <item>王朗</item>
+        <item>黄盖</item>
+    </string-array>
+    <string-array name="Kingdoms">
+        <item>蜀</item>
+        <item>蜀</item>
+        <item>蜀</item>
+        <item>蜀</item>
+        <item>蜀</item>
+        <item>魏</item>
+        <item>吴</item>
+        <item>魏</item>
+        <item>魏</item>
+        <item>吴</item>
+    </string-array>
+</resources>
