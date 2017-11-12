@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import org.litepal.tablemanager.Connector;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,21 +27,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initCharacterList();//初始化商品列表
+        //创建数据库
+        Connector.getDatabase();
 
-        //发送随机推荐
-//        final int[] imageID = {R.mipmap.enchatedforest, R.mipmap.arla, R.mipmap.devondale, R.mipmap.kindle,
-//                R.mipmap.waitrose, R.mipmap.mcvitie, R.mipmap.ferrero, R.mipmap.maltesers, R.mipmap.lindt,
-//                R.mipmap.borggreve};
-//        Random random = new Random();
-//        int noti_choice = random.nextInt(GoodsList.size());
-//        Bundle random_recommand_bundle = new Bundle();
-//        random_recommand_bundle.putString("name", GoodsList.get(noti_choice).get("name").toString());
-//        random_recommand_bundle.putString("price", GoodsList.get(noti_choice).get("price").toString());
-//        random_recommand_bundle.putInt("icon", imageID[noti_choice]);
-//        Intent intentBroadcast = new Intent("static_action");
-//        intentBroadcast.putExtras(random_recommand_bundle);
-//        sendBroadcast(intentBroadcast);
+        //初始化商品列表
+        initCharacterList();
 
         //词典主界面的对话框
         final AlertDialog.Builder characterlist_alertdialog = new AlertDialog.Builder(this);
@@ -75,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String chose_name = CharacterList.get(i).get("name").toString();
                 Intent intent = new Intent(MainActivity.this, detail.class);
-                intent.putExtra("goodsName", chose_name);
+                intent.putExtra("Name", chose_name);
                 startActivity(intent);
             }
         });
@@ -86,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     {
         int[] ImageID = {R.drawable.liubei, R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
                             R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
-        String[] Names = getResources().getStringArray(R.array.charater_names);
+        String[] Names = getResources().getStringArray(R.array.character_names);
         String[] Kingdoms = getResources().getStringArray(R.array.Kingdoms);
         for(int i = 0; i < 10; i++)
         {
