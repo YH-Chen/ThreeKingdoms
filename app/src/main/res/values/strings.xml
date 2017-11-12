@@ -3,7 +3,7 @@
     <string name="title_activity_detail">detail</string>
     <string name="appwidget_text">当前没有任何信息</string>
     <string name="add_widget">Add widget</string>
-    <string-array name="charater_names">
+    <string-array name="character_names">
         <item>刘备</item>
         <item>关羽</item>
         <item>张飞</item>
@@ -26,5 +26,53 @@
         <item>魏</item>
         <item>魏</item>
         <item>吴</item>
+    </string-array>
+    <string-array name="gender">
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+    </string-array>
+    <string-array name="native_place">
+        <item>幽州涿郡涿(河北保定市涿州)</item>
+        <item>司隶河东郡解(山西运城市临猗县西南)</item>
+        <item>幽州涿郡(河北保定市涿州)</item>
+        <item>徐州琅邪国阳都(山东临沂市沂南县南)</item>
+        <item>冀州常山国真定(河北石家庄市正定县南)</item>
+        <item>豫州沛国谯(安徽亳州市亳县)</item>
+        <item>扬州吴郡富春(浙江杭州市富阳)</item>
+        <item>司隶河内郡温(河南焦作市温县西)</item>
+        <item>徐州东海郡郯(山东临沂市郯城县西北)</item>
+        <item>荆州零陵郡泉陵(湖南永州市零陵区)</item>
+    </string-array>
+    <string-array name="birth">
+        <item>161年</item>
+        <item>\?</item>
+        <item>\?</item>
+        <item>181年</item>
+        <item>\?</item>
+        <item>155年</item>
+        <item>182年</item>
+        <item>179年</item>
+        <item>\?</item>
+        <item>\?</item>
+    </string-array>
+    <string-array name="death">
+        <item>223年</item>
+        <item>219年</item>
+        <item>221年</item>
+        <item>234年</item>
+        <item>229年</item>
+        <item>220年</item>
+        <item>252年</item>
+        <item>251年</item>
+        <item>228年</item>
+        <item>/?</item>
     </string-array>
 </resources>

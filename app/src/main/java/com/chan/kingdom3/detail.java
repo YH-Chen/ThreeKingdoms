@@ -1,6 +1,8 @@
 package com.chan.kingdom3;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,12 +28,14 @@ public class detail extends AppCompatActivity {
     int item_NO = -1;
     int count = 0;
     List<Map<String,Object>> Informations = new ArrayList<>();
+    Bitmap[] image_list = new Bitmap[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        fill_image_list();
         initInformation();
 
         Bundle extras = this.getIntent().getExtras();
@@ -49,7 +53,7 @@ public class detail extends AppCompatActivity {
 
         //设置图片
         ImageView image = (ImageView)findViewById(R.id.image_detail);
-        image.setImageResource(Integer.parseInt(Informations.get(item_NO).get("image").toString()));
+        image.setImageBitmap(image_list[item_NO]);
 
         //返回按钮
         ImageButton BackButton = (ImageButton)findViewById(R.id.back_button);
@@ -125,11 +129,17 @@ public class detail extends AppCompatActivity {
         finish();
     }
 
-    void initInformation()
-    {
+    void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
                 R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
-        String[] Name = getResources().getStringArray(R.array.charater_names);
+        for(int i = 0; i < 10; i++){
+            Bitmap tmp_mp = BitmapFactory.decodeResource(getResources(), ImageID[i]);
+            image_list[i] = tmp_mp;
+        }
+    }
+    void initInformation()
+    {
+        String[] Name = getResources().getStringArray(R.array.character_names);
         String[] Kingdom = getResources().getStringArray(R.array.Kingdoms);
         String[] gender = getResources().getStringArray(R.array.gender);
         String[] birth = getResources().getStringArray(R.array.birth);
@@ -145,7 +155,7 @@ public class detail extends AppCompatActivity {
             temp.put("birth", birth[i]);
             temp.put("death", death[i]);
             temp.put("native_place", native_place[i]);
-            temp.put("image", ImageID[i]);
+            temp.put("image", image_list[i]);
             Informations.add(temp);
         }
     }
