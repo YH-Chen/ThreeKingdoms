@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,11 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 public class detail extends AppCompatActivity {
-    String data = null;
-    String choiceName = null;
-    String choicePrice = null;
+    character chose_character;
     String DYNAMICACTION = "dynamic_action";
-    int item_NO = -1;
+    int item_id = -1;
     int count = 0;
     List<Map<String,Object>> Informations = new ArrayList<>();
     Bitmap[] image_list = new Bitmap[10];
@@ -35,25 +34,18 @@ public class detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        fill_image_list();
-        initInformation();
-
         Bundle extras = this.getIntent().getExtras();
         if(extras != null)
         {
-            data = extras.getString("Name");
-            for(int i = 0; i < Informations.size(); i++)
-            {
-                if(Informations.get(i).get("Name").toString().equals(data))
-                {
-                    item_NO = i;
-                }
-            }
+            item_id = extras.getInt("ID");
+            chose_character = DataSupport.find(character.class, item_id);
         }
 
         //设置图片
         ImageView image = (ImageView)findViewById(R.id.image_detail);
-        image.setImageBitmap(image_list[item_NO]);
+        byte[] bsTemp =  chose_character.getImage();//数据库存的是字节流
+        Bitmap bmTemp = BitmapFactory.decodeByteArray(bsTemp, 0, bsTemp.length);//解码字节流得到图片
+        image.setImageBitmap(bmTemp);
 
         //返回按钮
         ImageButton BackButton = (ImageButton)findViewById(R.id.back_button);
@@ -66,7 +58,7 @@ public class detail extends AppCompatActivity {
 
         //人物姓名
         TextView character_name = (TextView)findViewById(R.id.character_name);
-        character_name.setText(data);
+        character_name.setText(chose_character.getName());
 
         //星标按钮
         final ImageButton Star = (ImageButton)findViewById(R.id.Star);
@@ -108,11 +100,11 @@ public class detail extends AppCompatActivity {
 //        });
 
         List<Map<String,Object>> one_info = new ArrayList<>();
-        String[] info_str = {Informations.get(item_NO).get("gender").toString(),
-                                Informations.get(item_NO).get("Kingdom").toString(),
-                                Informations.get(item_NO).get("birth").toString(),
-                                Informations.get(item_NO).get("death").toString(),
-                                Informations.get(item_NO).get("native_place").toString()};
+        String[] info_str = {chose_character.getGender(),
+                              chose_character.getKingdom(),
+                              chose_character.getBirth(),
+                              chose_character.getDeath(),
+                              chose_character.getNative_place()};
         for(int i = 0; i < 5; i++)
         {
             Map<String,Object> temp = new LinkedHashMap<>();
@@ -127,36 +119,5 @@ public class detail extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         finish();
-    }
-
-    void fill_image_list(){
-        int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
-                R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
-        for(int i = 0; i < 10; i++){
-            Bitmap tmp_mp = BitmapFactory.decodeResource(getResources(), ImageID[i]);
-            image_list[i] = tmp_mp;
-        }
-    }
-    void initInformation()
-    {
-        String[] Name = getResources().getStringArray(R.array.character_names);
-        String[] Kingdom = getResources().getStringArray(R.array.Kingdoms);
-        String[] gender = getResources().getStringArray(R.array.gender);
-        String[] birth = getResources().getStringArray(R.array.birth);
-        String[] death = getResources().getStringArray(R.array.death);
-        String[] native_place = getResources().getStringArray(R.array.native_place);
-
-        for(int i = 0; i < 10; i++)
-        {
-            Map<String, Object> temp = new LinkedHashMap<>();
-            temp.put("Name", Name[i]);
-            temp.put("Kingdom", Kingdom[i]);
-            temp.put("gender",gender[i]);
-            temp.put("birth", birth[i]);
-            temp.put("death", death[i]);
-            temp.put("native_place", native_place[i]);
-            temp.put("image", image_list[i]);
-            Informations.add(temp);
-        }
     }
 }

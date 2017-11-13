@@ -12,8 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,11 +32,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //把Resource转为bitmap的list
+        fill_image_list();
+
         //创建数据库
         Connector.getDatabase();
+        fill_database();
 
         //初始化商品列表
-        fill_image_list();
         initCharacterList();
 
         //词典主界面的对话框
@@ -70,14 +75,15 @@ public class MainActivity extends AppCompatActivity {
         characters.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String chose_name = CharacterList.get(i).get("name").toString();
+                int chose_id = (int) CharacterList.get(i).get("ID");
                 Intent intent = new Intent(MainActivity.this, detail.class);
-                intent.putExtra("Name", chose_name);
+                intent.putExtra("ID", chose_id);
                 startActivity(intent);
             }
         });
     }
 
+    //把Resources都换成bitmap
     void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
                 R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
@@ -86,17 +92,44 @@ public class MainActivity extends AppCompatActivity {
             image_list[i] = tmp_mp;
         }
     }
+    //bitmap转为字节流
+    private byte[] bmTObyte(Bitmap bm){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
+    }
+    //填充数据库的初始值
+    void fill_database(){
+        String[] Name = getResources().getStringArray(R.array.character_names);
+        String[] Kingdom = getResources().getStringArray(R.array.Kingdoms);
+        String[] gender = getResources().getStringArray(R.array.gender);
+        String[] birth = getResources().getStringArray(R.array.birth);
+        String[] death = getResources().getStringArray(R.array.death);
+        String[] native_place = getResources().getStringArray(R.array.native_place);
+
+        for(int i = 0; i < 10; i++){
+            character temp_c = new character();
+            temp_c.setName(Name[i]);
+            temp_c.setKingdom(Kingdom[i]);
+            temp_c.setGender(gender[i]);
+            temp_c.setBirth(birth[i]);
+            temp_c.setDeath(death[i]);
+            temp_c.setNative_place(native_place[i]);
+            temp_c.setImage(bmTObyte(image_list[i]));
+            temp_c.save();
+        }
+    }
     //商品列表在此初始化
     private void initCharacterList()
     {
-        String[] Names = getResources().getStringArray(R.array.character_names);
-        String[] Kingdoms = getResources().getStringArray(R.array.Kingdoms);
+        List<character> Chs = DataSupport.findAll(character.class);
         for(int i = 0; i < 10; i++)
         {
             Map<String, Object> temp = new LinkedHashMap<>();
-            temp.put("image", image_list[i]);
-            temp.put("name", Names[i]);
-            temp.put("Kingdoms", Kingdoms[i]);
+            temp.put("ID", Chs.get(i).getId());
+            temp.put("image", BitmapFactory.decodeByteArray(Chs.get(i).getImage(), 0, Chs.get(i).getImage().length));
+            temp.put("name", Chs.get(i).getName());
+            temp.put("Kingdoms", Chs.get(i).getKingdom());
             CharacterList.add(temp);
         }
     }

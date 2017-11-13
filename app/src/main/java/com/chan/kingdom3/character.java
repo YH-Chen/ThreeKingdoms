@@ -10,7 +10,7 @@ import org.litepal.crud.DataSupport;
 
 public class character extends DataSupport {
     private int id;
-    private Bitmap image;
+    private byte[] image;
     private String Name;
     private String gender;
     private String Kingdom;
@@ -22,7 +22,7 @@ public class character extends DataSupport {
         return id;
     }
 
-    public Bitmap getImage() {
+    public byte[] getImage() {
 
         return image;
     }
@@ -55,7 +55,7 @@ public class character extends DataSupport {
         this.id = id;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
