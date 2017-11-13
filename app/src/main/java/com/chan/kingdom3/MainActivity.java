@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     SimpleAdapter simpleAdapter;
     ListView characters;
     Bitmap[] image_list = new Bitmap[10];
+    FloatingActionButton addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +46,9 @@ public class MainActivity extends AppCompatActivity {
         initCharacterList();
 
         //词典主界面的对话框
+        final String[] opItem = {"删除这个人物", "修改人物信息"};
         final AlertDialog.Builder characterlist_alertdialog = new AlertDialog.Builder(this);
-        characterlist_alertdialog.setTitle("移除商品")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+        characterlist_alertdialog.setTitle("操作人物词条");
 
         //词典主界面用ListView和SimpleAdapter
         characters = (ListView) findViewById(R.id.characterlist);
@@ -60,15 +59,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final int pos= position;
-                characterlist_alertdialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                characterlist_alertdialog.setItems(opItem, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CharacterList.remove(pos);
-                        simpleAdapter.notifyDataSetChanged();
+                        if(which == 0){
+                            Toast.makeText(getApplication(), CharacterList.get(pos).get("name")+"已移除", Toast.LENGTH_LONG).show();
+                            DataSupport.delete(character.class, (int)CharacterList.get(pos).get("ID"));
+                            CharacterList.remove(pos);
+                            simpleAdapter.notifyDataSetChanged();
+                        }
+                        else{
+                            Toast.makeText(getApplication(), "还无法修改任务信息", Toast.LENGTH_LONG).show();
+                        }
                     }
-                }).setMessage("从购物车移除"+CharacterList.get(pos).get("name")+"?")
-                        .create()
-                        .show();
+                }).show();
                 return true;
             }
         });
@@ -81,8 +85,34 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
+        addButton = (FloatingActionButton) findViewById(R.id.addFAB);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: activate a new activity to add new item
+                Intent intent = new Intent(MainActivity.this, newItem.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }//end onCreate
+
+    //接受回传的信息
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode == RESULT_OK){
+            if(requestCode == 1){
+                int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
+                character newChar = DataSupport.find(character.class, newID);
+                Map<String, Object> temp = new LinkedHashMap<>();
+                temp.put("ID", newChar.getId());
+                temp.put("image", BitmapFactory.decodeByteArray(newChar.getImage(), 0, newChar.getImage().length));
+                temp.put("name", newChar.getName());
+                temp.put("Kingdoms", newChar.getKingdom());
+                CharacterList.add(temp);
+                simpleAdapter.notifyDataSetChanged();
+            }
+        }
+    }
     //把Resources都换成bitmap
     void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
