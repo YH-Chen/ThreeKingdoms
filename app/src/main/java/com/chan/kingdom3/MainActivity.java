@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                             simpleAdapter.notifyDataSetChanged();
                         }
                         else{
-                            Toast.makeText(getApplication(), "还无法修改任务信息", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplication(), "还无法修改人物信息", Toast.LENGTH_LONG).show();
                         }
                     }
                 }).show();
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
                 R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < ImageID.length; i++){
             Bitmap tmp_mp = BitmapFactory.decodeResource(getResources(), ImageID[i]);
             image_list[i] = tmp_mp;
         }
@@ -138,8 +139,10 @@ public class MainActivity extends AppCompatActivity {
         String[] birth = getResources().getStringArray(R.array.birth);
         String[] death = getResources().getStringArray(R.array.death);
         String[] native_place = getResources().getStringArray(R.array.native_place);
+        String[] nickname = getResources().getStringArray(R.array.nickname);
+        String[] profile = getResources().getStringArray(R.array.profile);
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < Name.length; i++){
             character temp_c = new character();
             temp_c.setName(Name[i]);
             temp_c.setKingdom(Kingdom[i]);
@@ -148,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
             temp_c.setDeath(death[i]);
             temp_c.setNative_place(native_place[i]);
             temp_c.setImage(bmTObyte(image_list[i]));
+            temp_c.setNickname(nickname[i]);
+            temp_c.setProfile(profile[i]);
             temp_c.save();
         }
     }

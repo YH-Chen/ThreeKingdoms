@@ -75,4 +75,28 @@
         <item>228年</item>
         <item>\?</item>
     </string-array>
+    <string-array name="nickname">
+        <item>刘备1</item>
+        <item>关羽1</item>
+        <item>张飞1</item>
+        <item>诸葛亮1</item>
+        <item>赵云1</item>
+        <item>曹操1</item>
+        <item>孙权1</item>
+        <item>司马懿1</item>
+        <item>王朗1</item>
+        <item>黄盖1</item>
+    </string-array>
+    <string-array name="profile">
+        <item>刘备2</item>
+        <item>关羽2</item>
+        <item>张飞2</item>
+        <item>诸葛亮2</item>
+        <item>赵云2</item>
+        <item>曹操2</item>
+        <item>孙权2</item>
+        <item>司马懿2</item>
+        <item>王朗2</item>
+        <item>黄盖2</item>
+    </string-array>
 </resources>
