@@ -4,11 +4,13 @@ import android.graphics.Bitmap;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by 61915 on 17/11/12.
  */
 
-public class character extends DataSupport {
+public class character extends DataSupport implements Serializable {
     private int id;
     private byte[] image;
     private String nickname;

@@ -17,7 +17,7 @@
     </string-array>
     <string-array name="Kingdoms">
         <item>蜀</item>
-        <item>蜀</item>
+        <item>群</item>
         <item>蜀</item>
         <item>蜀</item>
         <item>蜀</item>
@@ -31,7 +31,7 @@
         <item>男</item>
         <item>男</item>
         <item>男</item>
-        <item>男</item>
+        <item>女</item>
         <item>男</item>
         <item>男</item>
         <item>男</item>
@@ -98,5 +98,17 @@
         <item>司马懿2</item>
         <item>王朗2</item>
         <item>黄盖2</item>
+    </string-array>
+
+    <string-array name="gender_spin">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+
+    <string-array name="kingdom_spin">
+        <item>魏</item>
+        <item>蜀</item>
+        <item>吴</item>
+        <item>群</item>
     </string-array>
 </resources>

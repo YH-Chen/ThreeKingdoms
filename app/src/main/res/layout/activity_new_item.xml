@@ -1,134 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.chan.kingdom3.newItem">
-    <ImageButton
-        android:id="@+id/character_image_button"
+    android:background="@mipmap/changebg">
+
+    <ImageView
+        android:id="@+id/change_head"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/default_image"
-        android:scaleType="centerCrop"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"/>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/character_name_textinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/character_image_button"
-        android:layout_margin="10dp">
-        <EditText
-            android:layout_width="wrap_content"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/circle_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_width="900px"
+        android:layout_height="120px"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_head">
+
+        <TextView
+            android:id="@+id/nick_text"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:ems="16"
-            android:textSize="18sp"
-            android:inputType="text"
-            android:hint="人物姓名"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="称号" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/character_gender_textinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/character_name_textinput"
-        android:layout_margin="10dp">
+
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/nick_edit"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:ems="16"
-            android:textSize="18sp"
-            android:inputType="text"
-            android:hint="人物性别"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="123"
+            android:background="@drawable/edit_bg" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/character_kingdom_textinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/character_gender_textinput"
-        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/name_text"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="姓名" />
+
+
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/name_edit"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:ems="16"
-            android:textSize="18sp"
-            android:inputType="text"
-            android:hint="所属势力"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="456"
+            android:background="@drawable/edit_bg" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/character_birth_textinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/character_kingdom_textinput"
-        android:layout_margin="10dp">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line2"
+        android:layout_width="900px"
+        android:layout_height="120px"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1">
+
+        <TextView
+            android:id="@+id/gender_text"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="性别"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <Spinner
+            android:id="@+id/gender_sel"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@drawable/edit_bg"
+            android:gravity="center"
+            android:text="123"
+            android:textAlignment="center"
+            android:entries="@array/gender_spin"/>
+
+
+        <TextView
+            android:id="@+id/kingdom_text"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="国家"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <Spinner
+            android:id="@+id/kingdom_sel"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@drawable/edit_bg"
+            android:entries="@array/kingdom_spin"
+            android:textAlignment="center"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line3"
+        android:layout_width="900px"
+        android:layout_height="120px"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line2">
+
+        <TextView
+            android:id="@+id/place_text"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="出身地" />
+
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/place_edit"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:ems="16"
-            android:textSize="18sp"
-            android:inputType="text"
-            android:hint="出生年份"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="7"
+            android:gravity="center"
+            android:text="456"
+            android:background="@drawable/edit_bg" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/character_death_textinput"
-        android:layout_width="wrap_content"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line4"
+        android:layout_width="900px"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/character_birth_textinput"
-        android:layout_margin="10dp">
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line3">
+
+        <TextView
+            android:id="@+id/birdea_text"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="生卒年" />
+
+
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/birth_edit"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:ems="16"
-            android:textSize="18sp"
-            android:inputType="text"
-            android:hint="死亡年份"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="123"
+            android:background="@drawable/edit_bg" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/character_native_place_textinput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/character_death_textinput"
-        android:layout_margin="10dp">
+        <TextView
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="-" />
+
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/death_edit"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:ems="16"
-            android:textSize="18sp"
-            android:inputType="text"
-            android:hint="籍贯"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="123"
+            android:background="@drawable/edit_bg" />
 
-    <Button
-        android:id="@+id/confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="确定"
-        android:textColor="@color/white"
-        android:background="@drawable/shape_corner"
-        app:layout_constraintTop_toBottomOf="@+id/character_native_place_textinput"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_margin="5dp"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/detail_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="取消"
-        android:textColor="@color/white"
-        android:background="@drawable/shape_corner"
-        app:layout_constraintTop_toBottomOf="@+id/character_native_place_textinput"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="5dp"/>
+        android:text="详细信息"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/line4"/>
+
+
+    <EditText
+        android:id="@+id/detail_edit"
+        android:layout_width="900px"
+        android:layout_height="300px"
+        android:layout_marginTop="8dp"
+        android:layout_weight="5"
+        android:background="@drawable/edit_bg"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_text" />
+
+    <LinearLayout
+        android:layout_width="900px"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_edit"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/change_yes"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="#0096C8"
+            android:text="确认" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/change_cancel"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="#CC6758"
+            android:text="放弃" />
+
+    </LinearLayout>
+
+
 </android.support.constraint.ConstraintLayout>
