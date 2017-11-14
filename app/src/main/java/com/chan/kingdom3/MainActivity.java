@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int FROM_NEWITEM = 2;
+    public static final int FROM_DETAIL = 3;
     List<Map<String, Object>> CharacterList = new ArrayList<>();
     SimpleAdapter simpleAdapter;
     ListView characters;
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 int chose_id = (int) CharacterList.get(i).get("ID");
                 Intent intent = new Intent(MainActivity.this, detail.class);
                 intent.putExtra("ID", chose_id);
-                startActivity(intent);
+                startActivityForResult(intent, FROM_DETAIL);
             }
         });
 
@@ -94,8 +96,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO: activate a new activity to add new item
+                character newChar = new character();
+                newChar.setImage(bmTObyte(BitmapFactory.decodeResource(getResources(), R.drawable.default_image)));
                 Intent intent = new Intent(MainActivity.this, newItem.class);
-                startActivityForResult(intent, 1);
+                intent.putExtra("ID", newChar.getId());
+                startActivityForResult(intent, FROM_NEWITEM);
             }
         });
     }//end onCreate
@@ -103,16 +108,40 @@ public class MainActivity extends AppCompatActivity {
     //接受回传的信息
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == RESULT_OK){
-            if(requestCode == 1){
+            if(requestCode == FROM_NEWITEM){
                 int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
                 character newChar = DataSupport.find(character.class, newID);
                 Map<String, Object> temp = new LinkedHashMap<>();
-                temp.put("ID", newChar.getId());
+                temp.put("ID", newID);
                 temp.put("image", BitmapFactory.decodeByteArray(newChar.getImage(), 0, newChar.getImage().length));
                 temp.put("name", newChar.getName());
                 temp.put("Kingdoms", newChar.getKingdom());
                 CharacterList.add(temp);
                 simpleAdapter.notifyDataSetChanged();
+            }
+            else if(requestCode == FROM_DETAIL){
+                int changeID = data.getIntExtra("ID", -1);
+                character changeChar = DataSupport.find(character.class, changeID);
+                int changeIndex = -1;
+                for(int i = 0; i < CharacterList.size(); i++)
+                {
+                    if((int)CharacterList.get(i).get("ID") == changeID){
+                        changeIndex = i;
+                    }
+                }
+                //Flag == true 修改, Flag == false 删除
+                if(data.getBooleanExtra("Flag", true)){
+                    Map<String, Object> temp = CharacterList.get(changeIndex);
+                    temp.put("ID", changeID);
+                    temp.put("image", BitmapFactory.decodeByteArray(changeChar.getImage(), 0, changeChar.getImage().length));
+                    temp.put("name", changeChar.getName());
+                    temp.put("Kingdoms", changeChar.getKingdom());
+                    simpleAdapter.notifyDataSetChanged();
+                }
+                else{
+                    CharacterList.remove(changeIndex);
+                    simpleAdapter.notifyDataSetChanged();
+                }
             }
         }
     }

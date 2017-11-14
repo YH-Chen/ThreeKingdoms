@@ -6,12 +6,28 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="com.chan.kingdom3.MainActivity">
 
+    <EditText
+        android:id="@+id/search_edittext"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="搜索"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/search_edittext"
+        app:layout_constraintTop_toTopOf="@id/search_edittext"
+        android:text="搜索"
+        />
+
     <ListView
         android:id="@+id/characterlist"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_edittext" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addFAB"
