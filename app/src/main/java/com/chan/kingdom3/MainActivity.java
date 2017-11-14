@@ -35,12 +35,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //把Resource转为bitmap的list
-        fill_image_list();
+        if(!DataSupport.isExist(character.class)){
+            //把Resource转为bitmap的list
+            fill_image_list();
 
-        //创建数据库
-        Connector.getDatabase();
-        fill_database();
+            //创建数据库
+            Connector.getDatabase();
+            fill_database();
+        }
 
         //初始化商品列表
         initCharacterList();
@@ -152,8 +154,9 @@ public class MainActivity extends AppCompatActivity {
     //商品列表在此初始化
     private void initCharacterList()
     {
+        int k = DataSupport.count("character");
         List<character> Chs = DataSupport.findAll(character.class);
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < k; i++)
         {
             Map<String, Object> temp = new LinkedHashMap<>();
             temp.put("ID", Chs.get(i).getId());
