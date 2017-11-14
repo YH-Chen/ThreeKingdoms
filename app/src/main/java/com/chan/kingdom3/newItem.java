@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class newItem extends AppCompatActivity {
 
@@ -53,7 +54,7 @@ public class newItem extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //创建File对象，用于存储拍照后的图片
-                File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+                File outputImage = new File(getExternalCacheDir(), "output_image.png");
                 try {
                     if (outputImage.exists()) {
                         outputImage.delete();
@@ -122,10 +123,12 @@ public class newItem extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     try{
                         //将拍摄的照片显示
-                        Bitmap photoBM = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-//                        imageInput = bmTObyte(photoBM);
-                        imageBtn.setImageBitmap(photoBM);
-                    }catch (FileNotFoundException e){
+//                        Bitmap photoBM = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+//                        imageInput = ;
+//                        imageBtn.setImageBitmap(photoBM);
+                        imageInput = readStream(getContentResolver().openInputStream(imageUri));
+                        imageBtn.setImageBitmap(BitmapFactory.decodeByteArray(imageInput, 0, imageInput.length));
+                    }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
@@ -133,5 +136,18 @@ public class newItem extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    //得到图片字节流数组大小
+    public static byte [] readStream(InputStream inStream)  throws  Exception{
+        ByteArrayOutputStream outStream = new  ByteArrayOutputStream();
+        byte [] buffer =  new   byte [ 1024 ];
+        int  len =  0 ;
+        while ( (len=inStream.read(buffer)) != - 1 ){
+            outStream.write(buffer, 0 , len);
+        }
+        outStream.close();
+        inStream.close();
+        return  outStream.toByteArray();
     }
 }
