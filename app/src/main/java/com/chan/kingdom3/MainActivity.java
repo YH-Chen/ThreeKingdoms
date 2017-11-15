@@ -79,13 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         characters.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int chose_id = (int) CharacterList.get(i).get("ID");
                 Intent intent = new Intent(MainActivity.this, detail.class);
                 intent.putExtra("ID", chose_id);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -95,24 +96,49 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO: activate a new activity to add new item
                 Intent intent = new Intent(MainActivity.this, newItem.class);
-                startActivityForResult(intent, 1);
+                Bundle bundle = new Bundle();
+                character temp_c = new character();
+                temp_c.setName("");
+                temp_c.setKingdom("");
+                temp_c.setGender("");
+                temp_c.setBirth("");
+                temp_c.setDeath("");
+                temp_c.setNative_place("");
+                temp_c.setNickname("");
+                temp_c.setProfile("");
+                temp_c.setImage(bmTObyte(BitmapFactory.decodeResource(getResources(), R.drawable.default_image)));
+                bundle.putSerializable("char", temp_c);
+                bundle.putInt("which", 1);
+                intent.putExtras(bundle);
+                MainActivity.this.startActivity(intent);
             }
         });
     }//end onCreate
 
     //接受回传的信息
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(resultCode == RESULT_OK){
-            if(requestCode == 1){
-                int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
-                character newChar = DataSupport.find(character.class, newID);
-                Map<String, Object> temp = new LinkedHashMap<>();
-                temp.put("ID", newChar.getId());
-                temp.put("image", BitmapFactory.decodeByteArray(newChar.getImage(), 0, newChar.getImage().length));
-                temp.put("name", newChar.getName());
-                temp.put("Kingdoms", newChar.getKingdom());
-                CharacterList.add(temp);
-                simpleAdapter.notifyDataSetChanged();
+        if(resultCode== 1){
+            int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
+            for(int i = 0; i < CharacterList.size(); i++) {
+                if (CharacterList.get(i).get("ID").equals(newID)) {
+                    CharacterList.remove(i);
+                    DataSupport.delete(character.class, (int)CharacterList.get(i).get("ID"));
+                    simpleAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+        if(resultCode== 2){
+            int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
+            for(int i = 0; i < CharacterList.size(); i++) {
+                if (CharacterList.get(i).get("ID").equals(newID)) {
+                    character Chs = (character) DataSupport.findAll(character.class);
+                    Map<String, Object> temp = new LinkedHashMap<>();
+                    temp.put("ID", Chs.getId());
+                    temp.put("image", BitmapFactory.decodeByteArray(Chs.getImage(), 0, Chs.getImage().length));
+                    temp.put("name", Chs.getName());
+                    temp.put("Kingdoms", Chs.getKingdom());
+                    CharacterList.add(i, temp);
+                }
             }
         }
     }
