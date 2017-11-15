@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.DocumentsContract;
@@ -26,6 +27,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
@@ -35,43 +38,138 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 public class newItem extends AppCompatActivity {
-
+    character character;
+    int item_id = -1;
+    int which = -1;
     public static final int TAKE_PHOTO = 2;
     public static final int CHOOSE_PHOTO = 3;
     ImageButton imageBtn;
     private Uri imageUri;
-
-    TextInputLayout nameTextInput;
-    TextInputLayout genderTextInput;
-    TextInputLayout kingdomTextInput;
-    TextInputLayout birthTextInput;
-    TextInputLayout deathTextInput;
-    TextInputLayout native_placeTextInput;
     Bitmap imageInput;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_item);
+    private Typeface type;
+    private AlertDialog.Builder builder;
 
-        nameTextInput = (TextInputLayout)findViewById(R.id.character_name_textinput);
-        genderTextInput = (TextInputLayout)findViewById(R.id.character_gender_textinput);
-        kingdomTextInput = (TextInputLayout)findViewById(R.id.character_kingdom_textinput);
-        birthTextInput = (TextInputLayout)findViewById(R.id.character_birth_textinput);
-        deathTextInput = (TextInputLayout)findViewById(R.id.character_death_textinput);
-        native_placeTextInput = (TextInputLayout)findViewById(R.id.character_native_place_textinput);
-        imageInput = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
+    private TextView nameText;
+    private TextView nickText;
+    private TextView genderText;
+    private TextView kingdomText;
+    private TextView placeText;
+    private TextView birdeaText;
+    private TextView detailText;
+    private EditText nickEdit;
+    private EditText nameEdit;
+    private EditText detailEdit;
+    private EditText birthEdit;
+    private EditText deathEdit;
+    private EditText placeEdit;
+    private Spinner kingdomSpin;
+    private Spinner genderSpin;
+    private Button yes;
+    private Button back;
+    private ImageView headPhoto;
 
-        //头像的对话框
+    private void initial(){
+        nameText = (TextView) findViewById(R.id.name_text);
+        nickText = (TextView)findViewById(R.id.nick_text);
+        genderText = (TextView)findViewById(R.id.gender_text);
+        kingdomText = (TextView)findViewById(R.id.kingdom_text);
+        placeText = (TextView)findViewById(R.id.place_text);
+        birdeaText = (TextView)findViewById(R.id.birdea_text);
+        detailText = (TextView)findViewById(R.id.detail_text);
+        nickEdit = (EditText)findViewById(R.id.nick_edit);
+        nameEdit = (EditText)findViewById(R.id.name_edit);
+        detailEdit = (EditText)findViewById(R.id.detail_edit);
+        birthEdit = (EditText)findViewById(R.id.birth_edit);
+        deathEdit = (EditText)findViewById(R.id.death_edit);
+        placeEdit = (EditText)findViewById(R.id.place_edit);
+        kingdomSpin = (Spinner)findViewById(R.id.kingdom_sel);
+        genderSpin = (Spinner)findViewById(R.id.gender_sel);
+        yes = (Button)findViewById(R.id.change_yes);
+        back = (Button)findViewById(R.id.change_cancel);;
+        headPhoto = (ImageView)findViewById(R.id.change_head);
+
+        type = Typeface.createFromAsset(getAssets(), "FZLBJW.TTF");
+        nameText.setTypeface(type);
+        nickText.setTypeface(type);
+        genderText.setTypeface(type);
+        kingdomText.setTypeface(type);
+        placeText.setTypeface(type);
+        birdeaText.setTypeface(type);
+        detailText.setTypeface(type);
+
+        builder = new AlertDialog.Builder(this);
+
+        nickEdit.setText(character.getNickname());
+        nameEdit.setText(character.getName());
+        detailEdit.setText(character.getProfile());
+        birthEdit.setText(character.getBirth());
+        deathEdit.setText(character.getDeath());
+        placeEdit.setText(character.getNative_place());
+
+        String [] kingdomArr = getResources().getStringArray(R.array.kingdom_spin);
+        for(int i = 0; i <= 3; i++)
+            if(kingdomArr[i].equals(character.getKingdom())) kingdomSpin.setSelection(i);
+        if(character.getGender().equals("男")) genderSpin.setSelection(0);
+        else genderSpin.setSelection(1);
+
+        byte[] bsTemp =  character.getImage();//数据库存的是字节流
+        Bitmap bmTemp = BitmapFactory.decodeByteArray(bsTemp, 0, bsTemp.length);//解码字节流得到图片
+        headPhoto.setImageBitmap(bmTemp);
+    }
+
+    private void setListener(){
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newItem.this.builder.setMessage("确认修改武将信息？修改后将无法撤回。");
+                newItem.this.builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}});
+                newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        character.setBirth(birthEdit.getText().toString());
+                        character.setDeath(deathEdit.getText().toString());
+                        character.setName(nameEdit.getText().toString());
+                        character.setNickname(nickEdit.getText().toString());
+                        character.setNative_place(placeEdit.getText().toString());
+                        character.setProfile(detailEdit.getText().toString());
+                        character.setKingdom(kingdomSpin.getSelectedItem().toString());
+                        character.setGender(genderSpin.getSelectedItem().toString());
+                        character.save();
+                        Intent intent = new Intent(newItem.this, detail.class);
+                        intent.putExtra("Id", item_id);
+                        newItem.this.startActivity(intent);
+                    }
+                }).create().show();
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newItem.this.builder.setMessage("确认返回？修改的数据将不被保存。");
+                newItem.this.builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}});
+                newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        newItem.this.finish();
+                    }
+                }).create().show();
+            }
+        });
+
         final String[] opItem = {"拍照", "从相册里选择"};
         final AlertDialog.Builder pic_alertdialog = new AlertDialog.Builder(this);
         pic_alertdialog.setTitle("选择头像");
-        //头像按钮
-        imageBtn = (ImageButton)findViewById(R.id.character_image_button);
-        imageBtn.setOnClickListener(new View.OnClickListener() {
+        headPhoto.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 pic_alertdialog.setItems(opItem, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -86,41 +184,31 @@ public class newItem extends AppCompatActivity {
                         }
                     }
                 }).show();
+                return false;
             }
         });
+    }
 
-        //确定按钮
-        Button confirmBtn = (Button)findViewById(R.id.confirm);
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                character newCharacter = new character();
-                newCharacter.setName(nameTextInput.getEditText().getText().toString());
-                newCharacter.setGender(genderTextInput.getEditText().getText().toString());
-                newCharacter.setKingdom(kingdomTextInput.getEditText().getText().toString());
-                newCharacter.setBirth(birthTextInput.getEditText().getText().toString());
-                newCharacter.setDeath(deathTextInput.getEditText().getText().toString());
-                newCharacter.setNative_place(native_placeTextInput.getEditText().getText().toString());
-                newCharacter.setImage(bmTObyte(imageInput));
-                newCharacter.save();
 
-                Intent intent = new Intent();
-                intent.putExtra("ID", newCharacter.getId());
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });//end confirmBtn Listener
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_item);
 
-        Button cancelBtn = (Button)findViewById(R.id.cancel);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("ID", -1);
-                setResult(RESULT_CANCELED, intent);
-                finish();
-            }
-        });
+        Bundle extras = this.getIntent().getExtras();
+        if(extras != null)
+        {
+            which = extras.getInt("which");
+        }
+        if(which == 1)
+            character = (character)extras.getSerializable("char");
+        else{
+            item_id = extras.getInt("ID");
+            character = DataSupport.find(character.class, item_id);
+        }
+        initial();
+        setListener();
+
     }//end Create
 
     //bitmap转为字节流

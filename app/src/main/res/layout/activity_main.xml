@@ -12,20 +12,22 @@ tools:context="com.chan.kingdom3.MainActivity">
         android:layout_height="wrap_content"
         android:hint="搜索"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/characterlist"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@+id/search_edittext"
         app:layout_constraintTop_toTopOf="@id/search_edittext"
-        android:text="搜索"
-        />
+        android:text="搜索" />
 
     <ListView
         android:id="@+id/characterlist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_edittext" />
 
