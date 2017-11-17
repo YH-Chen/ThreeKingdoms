@@ -4,13 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -28,9 +29,14 @@ public class MainActivity extends AppCompatActivity {
     public static final int FROM_NEWITEM = 2;
     public static final int FROM_DETAIL = 3;
     List<Map<String, Object>> CharacterList = new ArrayList<>();
-    SimpleAdapter simpleAdapter;
+    List<Map<String, Object>> searchList = new ArrayList<>();
+    SimpleAdapter characterAdapter;
+    SimpleAdapter searchAdapter;
     ListView characters;
+    ListView searchListView;
     Bitmap[] image_list = new Bitmap[10];
+    Button searchBtn;
+    EditText searchEdit;
     FloatingActionButton addButton;
 
     @Override
@@ -57,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         //词典主界面用ListView和SimpleAdapter
         characters = (ListView) findViewById(R.id.characterlist);
-        simpleAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
-        simpleAdapter.setViewBinder(new ImageView_Bitmap_Binder());
-        characters.setAdapter(simpleAdapter);
+        characterAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
+        characterAdapter.setViewBinder(new ImageView_Bitmap_Binder());
+        characters.setAdapter(characterAdapter);
         characters.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplication(), CharacterList.get(pos).get("name")+"已移除", Toast.LENGTH_LONG).show();
                             DataSupport.delete(character.class, (int)CharacterList.get(pos).get("ID"));
                             CharacterList.remove(pos);
-                            simpleAdapter.notifyDataSetChanged();
+                            characterAdapter.notifyDataSetChanged();
                         }
                         else{
                             Toast.makeText(getApplication(), "还无法修改人物信息", Toast.LENGTH_LONG).show();
@@ -91,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //添加新的词条
         addButton = (FloatingActionButton) findViewById(R.id.addFAB);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +108,42 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, newItem.class);
                 intent.putExtra("ID", newChar.getId());
                 startActivityForResult(intent, FROM_NEWITEM);
+            }
+        });
+
+        //搜索页面使用ListView和SimpleAdapter
+        searchListView = findViewById(R.id.searchlist);
+        searchAdapter = new SimpleAdapter(this, searchList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
+        searchAdapter.setViewBinder(new ImageView_Bitmap_Binder());
+        searchListView.setAdapter(searchAdapter);
+        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                int chose_id = (int) searchList.get(i).get("ID");
+                Intent intent = new Intent(MainActivity.this, detail.class);
+                intent.putExtra("ID", chose_id);
+                startActivityForResult(intent, FROM_DETAIL);
+            }
+        });
+        //搜索按钮
+        searchBtn = findViewById(R.id.searchBtn);
+        searchEdit = findViewById(R.id.search_edittext);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(searchListView.getVisibility() == View.GONE){
+                    List<character> guess = DataSupport.where("Name like ?", "%"+searchEdit.getText().toString()+"%").find(character.class);
+                    fillSearchList(guess);
+                    searchAdapter.notifyDataSetChanged();
+                    searchListView.setVisibility(View.VISIBLE);
+                    characters.setVisibility(View.GONE);
+                    searchBtn.setText("取消");
+                }
+                else{
+                    searchListView.setVisibility(View.GONE);
+                    characters.setVisibility(View.VISIBLE);
+                    searchBtn.setText("搜索");
+                }
             }
         });
     }//end onCreate
@@ -117,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 temp.put("name", newChar.getName());
                 temp.put("Kingdoms", newChar.getKingdom());
                 CharacterList.add(temp);
-                simpleAdapter.notifyDataSetChanged();
+                characterAdapter.notifyDataSetChanged();
             }
             else if(requestCode == FROM_DETAIL){
                 int changeID = data.getIntExtra("ID", -1);
@@ -136,11 +179,11 @@ public class MainActivity extends AppCompatActivity {
                     temp.put("image", BitmapFactory.decodeByteArray(changeChar.getImage(), 0, changeChar.getImage().length));
                     temp.put("name", changeChar.getName());
                     temp.put("Kingdoms", changeChar.getKingdom());
-                    simpleAdapter.notifyDataSetChanged();
+                    characterAdapter.notifyDataSetChanged();
                 }
                 else{
                     CharacterList.remove(changeIndex);
-                    simpleAdapter.notifyDataSetChanged();
+                    characterAdapter.notifyDataSetChanged();
                 }
             }
         }
@@ -198,6 +241,18 @@ public class MainActivity extends AppCompatActivity {
             temp.put("name", Chs.get(i).getName());
             temp.put("Kingdoms", Chs.get(i).getKingdom());
             CharacterList.add(temp);
+        }
+    }
+    //搜索预测列表填充
+    private void fillSearchList(List<character> guess){
+        searchList.clear();
+        for(int i = 0; i < guess.size(); i++){
+            Map<String, Object> temp = new LinkedHashMap<>();
+            temp.put("ID", guess.get(i).getId());
+            temp.put("image", BitmapFactory.decodeByteArray(guess.get(i).getImage(), 0, guess.get(i).getImage().length));
+            temp.put("name", guess.get(i).getName());
+            temp.put("Kingdoms", guess.get(i).getKingdom());
+            searchList.add(temp);
         }
     }
 }

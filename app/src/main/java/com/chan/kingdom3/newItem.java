@@ -179,7 +179,6 @@ public class newItem extends AppCompatActivity {
                         }
                         else{
                             //从相册里选择
-//                            Toast.makeText(getApplication(), "还无法打开相册", Toast.LENGTH_LONG).show();
                             choose_photo();
                         }
                     }
