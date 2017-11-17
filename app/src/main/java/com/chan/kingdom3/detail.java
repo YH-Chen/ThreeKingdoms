@@ -10,29 +10,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 public class detail extends AppCompatActivity {
-    character character;
+    public static int FROM_NEWITEM = 2;
+    public static int FROM_DETAIL = 3;
+    character curr_character;
     int item_id = -1;
 
     private ConstraintLayout BG;
@@ -57,11 +45,11 @@ public class detail extends AppCompatActivity {
         if(extras != null)
         {
             item_id = extras.getInt("ID");
-            character = DataSupport.find(character.class, item_id);
+            curr_character = DataSupport.find(character.class, item_id);
         }
 
         initial();
-        set();
+        set(curr_character);
         setListener();
     }
 
@@ -91,24 +79,24 @@ public class detail extends AppCompatActivity {
         qun = R.mipmap.qun;
     }
 
-    private void set(){
+    private void set(character new_character){
         //设置背景
-        if(character.getKingdom().equals("魏")) BG.setBackgroundResource(wei);
-        if(character.getKingdom().equals("蜀")) BG.setBackgroundResource(shu);
-        if(character.getKingdom().equals("吴")) BG.setBackgroundResource(wu);
-        if(character.getKingdom().equals("群")) BG.setBackgroundResource(qun);
+        if(new_character.getKingdom().equals("魏")) BG.setBackgroundResource(wei);
+        if(new_character.getKingdom().equals("蜀")) BG.setBackgroundResource(shu);
+        if(new_character.getKingdom().equals("吴")) BG.setBackgroundResource(wu);
+        if(new_character.getKingdom().equals("群")) BG.setBackgroundResource(qun);
 
         //设置图片
-        byte[] bsTemp =  character.getImage();//数据库存的是字节流
+        byte[] bsTemp =  new_character.getImage();//数据库存的是字节流
         Bitmap bmTemp = BitmapFactory.decodeByteArray(bsTemp, 0, bsTemp.length);//解码字节流得到图片
         image.setImageBitmap(bmTemp);
 
         //人物信息
-        name.setText(character.getName());
-        nickname.setText(character.getNickname());
-        detail.setText("    " + character.getName() + "(" + character.getBirth() + " - " + character.getDeath() + "),"
-                + character.getGender() + ",属" + character.getKingdom() + "势力,"
-                + character.getNative_place() + "人。\n" + character.getProfile());
+        name.setText(new_character.getName());
+        nickname.setText(new_character.getNickname());
+        detail.setText("    " + new_character.getName() + "(" + new_character.getBirth() + " - " + new_character.getDeath() + "),"
+                + new_character.getGender() + ",属" + new_character.getKingdom() + "势力,"
+                + new_character.getNative_place() + "人。\n" + new_character.getProfile());
     }
 
     private void setListener(){
@@ -117,7 +105,8 @@ public class detail extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(detail.this, MainActivity.class);
                 intent.putExtra("ID", item_id);
-                detail.this.setResult(3, intent);
+                intent.putExtra("Flag", true);
+                detail.this.setResult(RESULT_OK, intent);
                 detail.this.finish();
             }
         });
@@ -130,8 +119,7 @@ public class detail extends AppCompatActivity {
                 bundle.putInt("ID", item_id);
                 bundle.putInt("which", 2);
                 intent.putExtras(bundle);
-                detail.this.startActivity(intent);
-                set();
+                detail.this.startActivityForResult(intent, FROM_NEWITEM);
             }
         });
 
@@ -145,9 +133,11 @@ public class detail extends AppCompatActivity {
                 detail.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        DataSupport.delete(character.class, item_id);
                         Intent intent = new Intent(detail.this, MainActivity.class);
+                        intent.putExtra("Flag", false);
                         intent.putExtra("ID", item_id);
-                        detail.this.setResult(1, intent);
+                        detail.this.setResult(RESULT_OK, intent);
                         detail.this.finish();
                     }
                 }).create().show();
@@ -155,4 +145,14 @@ public class detail extends AppCompatActivity {
         });
     }
 
+    //接受回传的信息
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode == RESULT_OK){
+            if(requestCode == FROM_NEWITEM){
+                character new_character = DataSupport.find(character.class, data.getIntExtra("ID", -1));
+                set(new_character);
+            }
+        }
+    }
 }

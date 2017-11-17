@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int FROM_NEWITEM = 2;
-    public static final int FROM_DETAIL = 3;
+    public static int FROM_NEWITEM = 2;
+    public static int FROM_DETAIL = 3;
     List<Map<String, Object>> CharacterList = new ArrayList<>();
     List<Map<String, Object>> searchList = new ArrayList<>();
     SimpleAdapter characterAdapter;
@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO: activate a new activity to add new item
                 character newChar = new character();
                 newChar.setImage(bmTObyte(BitmapFactory.decodeResource(getResources(), R.drawable.default_image)));
+                newChar.save();
                 Intent intent = new Intent(MainActivity.this, newItem.class);
                 intent.putExtra("ID", newChar.getId());
                 startActivityForResult(intent, FROM_NEWITEM);
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }//end onCreate
 
     //接受回传的信息
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == RESULT_OK){
             if(requestCode == FROM_NEWITEM){
@@ -170,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     if((int)CharacterList.get(i).get("ID") == changeID){
                         changeIndex = i;
+                        break;
                     }
                 }
                 //Flag == true 修改, Flag == false 删除

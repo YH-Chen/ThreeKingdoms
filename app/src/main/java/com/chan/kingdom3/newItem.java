@@ -1,22 +1,14 @@
 package com.chan.kingdom3;
 
-import android.Manifest;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,24 +21,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 
 public class newItem extends AppCompatActivity {
-    character character;
+    character curr_character;
     int item_id = -1;
-    int which = -1;
     public static final int TAKE_PHOTO = 2;
     public static final int CHOOSE_PHOTO = 3;
-    ImageButton imageBtn;
     private Uri imageUri;
     Bitmap imageInput;
     private Typeface type;
@@ -102,25 +88,26 @@ public class newItem extends AppCompatActivity {
 
         builder = new AlertDialog.Builder(this);
 
-        nickEdit.setText(character.getNickname());
-        nameEdit.setText(character.getName());
-        detailEdit.setText(character.getProfile());
-        birthEdit.setText(character.getBirth());
-        deathEdit.setText(character.getDeath());
-        placeEdit.setText(character.getNative_place());
+        nickEdit.setText(curr_character.getNickname());
+        nameEdit.setText(curr_character.getName());
+        detailEdit.setText(curr_character.getProfile());
+        birthEdit.setText(curr_character.getBirth());
+        deathEdit.setText(curr_character.getDeath());
+        placeEdit.setText(curr_character.getNative_place());
 
         String [] kingdomArr = getResources().getStringArray(R.array.kingdom_spin);
         for(int i = 0; i <= 3; i++)
-            if(kingdomArr[i].equals(character.getKingdom())) kingdomSpin.setSelection(i);
-        if(character.getGender().equals("男")) genderSpin.setSelection(0);
+            if(kingdomArr[i].equals(curr_character.getKingdom())) kingdomSpin.setSelection(i);
+        if("男".equals(curr_character.getGender())) genderSpin.setSelection(0);
         else genderSpin.setSelection(1);
 
-        byte[] bsTemp =  character.getImage();//数据库存的是字节流
+        byte[] bsTemp =  curr_character.getImage();//数据库存的是字节流
         Bitmap bmTemp = BitmapFactory.decodeByteArray(bsTemp, 0, bsTemp.length);//解码字节流得到图片
         headPhoto.setImageBitmap(bmTemp);
     }
 
     private void setListener(){
+        //确定并退出NewItem
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,23 +118,25 @@ public class newItem extends AppCompatActivity {
                 newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        character.setBirth(birthEdit.getText().toString());
-                        character.setDeath(deathEdit.getText().toString());
-                        character.setName(nameEdit.getText().toString());
-                        character.setNickname(nickEdit.getText().toString());
-                        character.setNative_place(placeEdit.getText().toString());
-                        character.setProfile(detailEdit.getText().toString());
-                        character.setKingdom(kingdomSpin.getSelectedItem().toString());
-                        character.setGender(genderSpin.getSelectedItem().toString());
-                        character.save();
+                        curr_character.setBirth(birthEdit.getText().toString());
+                        curr_character.setDeath(deathEdit.getText().toString());
+                        curr_character.setName(nameEdit.getText().toString());
+                        curr_character.setNickname(nickEdit.getText().toString());
+                        curr_character.setNative_place(placeEdit.getText().toString());
+                        curr_character.setProfile(detailEdit.getText().toString());
+                        curr_character.setKingdom(kingdomSpin.getSelectedItem().toString());
+                        curr_character.setGender(genderSpin.getSelectedItem().toString());
+                        curr_character.setImage(bmTObyte(imageInput));
+                        curr_character.save();
                         Intent intent = new Intent(newItem.this, detail.class);
-                        intent.putExtra("Id", item_id);
+                        intent.putExtra("ID", curr_character.getId());
                         newItem.this.startActivity(intent);
                     }
                 }).create().show();
             }
         });
 
+        //取消并退出NewItem
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +144,7 @@ public class newItem extends AppCompatActivity {
                 newItem.this.builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {}});
-                newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         newItem.this.finish();
@@ -195,16 +184,8 @@ public class newItem extends AppCompatActivity {
         setContentView(R.layout.activity_new_item);
 
         Bundle extras = this.getIntent().getExtras();
-        if(extras != null)
-        {
-            which = extras.getInt("which");
-        }
-        if(which == 1)
-            character = (character)extras.getSerializable("char");
-        else{
-            item_id = extras.getInt("ID");
-            character = DataSupport.find(character.class, item_id);
-        }
+        item_id = extras.getInt("ID");
+        curr_character = DataSupport.find(character.class, item_id);
         initial();
         setListener();
 
@@ -242,7 +223,7 @@ public class newItem extends AppCompatActivity {
                         options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
                         Bitmap bm = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, options);
                         imageInput = bm;
-                        imageBtn.setImageBitmap(bm);
+                        headPhoto.setImageBitmap(bm);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -267,7 +248,7 @@ public class newItem extends AppCompatActivity {
                     options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
                     Bitmap bm = BitmapFactory.decodeFile(imagePath, options); // 解码文件
                     Log.w("TAG", "size: " + bm.getByteCount() + " width: " + bm.getWidth() + " heigth:" + bm.getHeight()); // 输出图像数据
-                    imageBtn.setImageBitmap(bm);
+                    headPhoto.setImageBitmap(bm);
                     imageInput = bm;
                     cursor.close();
                 }
