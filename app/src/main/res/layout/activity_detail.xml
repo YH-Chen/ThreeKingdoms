@@ -9,35 +9,6 @@
     android:background="@mipmap/wei">
 
     <TextView
-        android:id="@+id/detail_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:ems="1"
-        android:text="曹操"
-        android:textColor="#ffffff"
-        android:textSize="45sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.578" />
-
-    <TextView
-        android:id="@+id/detail_nick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
-        android:ems="1"
-        android:text="亂世梟雄"
-        android:textColor="#ffffff"
-        android:textSize="35sp"
-        app:layout_constraintBottom_toTopOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="@+id/detail_name"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/detail_name"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/detail_jianjie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,6 +50,37 @@
         app:layout_constraintHorizontal_bias="0.74"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/detail_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:ems="1"
+        android:text="曹操"
+        android:textColor="#ffffff"
+        android:background="#A1EEEE00"
+        android:textSize="45sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.578" />
+
+    <TextView
+        android:id="@+id/detail_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:ems="1"
+        android:text="亂世梟雄"
+        android:textColor="#000000"
+        android:background="#C0B452CD"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="@+id/detail_name"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/detail_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floatingBtn"
         android:layout_width="73dp"
@@ -88,7 +90,7 @@
         app:layout_constraintHorizontal_bias="0.919"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        fab:fab_labelStyle="@style/fab_labels_style">
+        fab:fab_labelStyle="@style/fab_labels_style" >
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/detail_back"
