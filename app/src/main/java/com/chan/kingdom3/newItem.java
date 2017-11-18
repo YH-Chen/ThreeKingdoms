@@ -94,6 +94,7 @@ public class newItem extends AppCompatActivity {
         birthEdit.setText(curr_character.getBirth());
         deathEdit.setText(curr_character.getDeath());
         placeEdit.setText(curr_character.getNative_place());
+        imageInput = BitmapFactory.decodeByteArray(curr_character.getImage(),0, curr_character.getImage().length);
 
         String [] kingdomArr = getResources().getStringArray(R.array.kingdom_spin);
         for(int i = 0; i <= 3; i++)
@@ -128,9 +129,10 @@ public class newItem extends AppCompatActivity {
                         curr_character.setGender(genderSpin.getSelectedItem().toString());
                         curr_character.setImage(bmTObyte(imageInput));
                         curr_character.save();
-                        Intent intent = new Intent(newItem.this, detail.class);
+                        Intent intent = new Intent();
                         intent.putExtra("ID", curr_character.getId());
-                        newItem.this.startActivity(intent);
+                        newItem.this.setResult(RESULT_OK, intent);
+                        newItem.this.finish();
                     }
                 }).create().show();
             }
@@ -283,5 +285,20 @@ public class newItem extends AppCompatActivity {
         //启动相册
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, CHOOSE_PHOTO);
+    }
+
+    //返回按钮
+    @Override
+    public void onBackPressed(){
+        newItem.this.builder.setMessage("确认返回？修改的数据将不被保存。");
+        newItem.this.builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}});
+        newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                newItem.this.finish();
+            }
+        }).create().show();
     }
 }

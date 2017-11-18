@@ -117,7 +117,6 @@ public class detail extends AppCompatActivity {
                 Intent intent = new Intent(detail.this, newItem.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("ID", item_id);
-                bundle.putInt("which", 2);
                 intent.putExtras(bundle);
                 detail.this.startActivityForResult(intent, FROM_NEWITEM);
             }
@@ -154,5 +153,16 @@ public class detail extends AppCompatActivity {
                 set(new_character);
             }
         }
+    }
+
+    //物理返回键
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(detail.this, MainActivity.class);
+        intent.putExtra("ID", item_id);
+        intent.putExtra("Flag", true);
+        detail.this.setResult(RESULT_OK, intent);
+        detail.this.finish();
+        finish();
     }
 }
