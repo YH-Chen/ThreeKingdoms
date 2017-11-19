@@ -1,56 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.chan.kingdom3.detail"
-android:orientation="vertical">
-
-<RelativeLayout
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detailBG"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="3"
-    android:background="@color/grey">
-    <ImageView
-        android:id="@+id/image_detail"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:src="@drawable/liubei"/>
+    android:layout_height="match_parent"
+    android:background="@mipmap/wei">
 
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/back"
-        android:background="#00000000"/>
     <TextView
-        android:id="@+id/character_name"
-        android:layout_height="wrap_content"
+        android:id="@+id/detail_jianjie"
         android:layout_width="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:layout_alignLeft="@id/back_button"
-        android:text="Ferror Rocher"
-        android:textSize="20dp"
-        android:textColor="@color/black"/>
-    <ImageButton
-        android:id="@+id/Star"
-        android:tag="0"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignBottom="@+id/character_name"
-        android:layout_marginRight="20dp"
-        android:src="@drawable/empty_star"
-        android:background="#00000000"/>
-</RelativeLayout>
-<ListView
-    android:id="@+id/info_list"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+        android:text="简介"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.105"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.801" />
 
-</LinearLayout>
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
+
+    <TextView
+        android:id="@+id/detail_detail"
+        android:layout_width="250dp"
+        android:layout_height="115dp"
+        android:textColor="@color/black"
+        android:textSize="10.5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.68"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.94" />
+
+    <ImageView
+        android:id="@+id/detail_image"
+        android:layout_width="310dp"
+        android:layout_height="390dp"
+        android:layout_marginBottom="165dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/detail_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:ems="1"
+        android:text="曹操"
+        android:textColor="#ffffff"
+        android:background="#A1EEEE00"
+        android:textSize="45sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.578" />
+
+    <TextView
+        android:id="@+id/detail_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:ems="1"
+        android:text="亂世梟雄"
+        android:textColor="#000000"
+        android:background="#C0B452CD"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="@+id/detail_name"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/detail_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/floatingBtn"
+        android:layout_width="73dp"
+        android:layout_height="89dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.919"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        fab:fab_labelStyle="@style/fab_labels_style" >
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/detail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="#CBCBCB"
+            fab:fab_size="mini"
+            fab:fab_title="主页" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/detail_to_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="#0096C8"
+            fab:fab_size="mini"
+            fab:fab_title="修改" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/detail_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="#CC6758"
+            fab:fab_size="mini"
+            fab:fab_title="删除" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+</android.support.constraint.ConstraintLayout>

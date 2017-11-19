@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -24,10 +26,17 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    public static int FROM_NEWITEM = 2;
+    public static int FROM_DETAIL = 3;
     List<Map<String, Object>> CharacterList = new ArrayList<>();
-    SimpleAdapter simpleAdapter;
+    List<Map<String, Object>> searchList = new ArrayList<>();
+    SimpleAdapter characterAdapter;
+    SimpleAdapter searchAdapter;
     ListView characters;
+    ListView searchListView;
     Bitmap[] image_list = new Bitmap[10];
+    Button searchBtn;
+    EditText searchEdit;
     FloatingActionButton addButton;
 
     @Override
@@ -54,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         //词典主界面用ListView和SimpleAdapter
         characters = (ListView) findViewById(R.id.characterlist);
-        simpleAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
-        simpleAdapter.setViewBinder(new ImageView_Bitmap_Binder());
-        characters.setAdapter(simpleAdapter);
+        characterAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
+        characterAdapter.setViewBinder(new ImageView_Bitmap_Binder());
+        characters.setAdapter(characterAdapter);
         characters.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -68,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplication(), CharacterList.get(pos).get("name")+"已移除", Toast.LENGTH_LONG).show();
                             DataSupport.delete(character.class, (int)CharacterList.get(pos).get("ID"));
                             CharacterList.remove(pos);
-                            simpleAdapter.notifyDataSetChanged();
+                            characterAdapter.notifyDataSetChanged();
                         }
                         else{
-                            Toast.makeText(getApplication(), "还无法修改任务信息", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplication(), "还无法修改人物信息", Toast.LENGTH_LONG).show();
                         }
                     }
                 }).show();
@@ -84,34 +93,101 @@ public class MainActivity extends AppCompatActivity {
                 int chose_id = (int) CharacterList.get(i).get("ID");
                 Intent intent = new Intent(MainActivity.this, detail.class);
                 intent.putExtra("ID", chose_id);
-                startActivity(intent);
+                startActivityForResult(intent, FROM_DETAIL);
             }
         });
 
+        //添加新的词条
         addButton = (FloatingActionButton) findViewById(R.id.addFAB);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: activate a new activity to add new item
+                character newChar = new character();
+                newChar.setImage(bmTObyte(BitmapFactory.decodeResource(getResources(), R.drawable.default_image)));
+                newChar.save();
                 Intent intent = new Intent(MainActivity.this, newItem.class);
-                startActivityForResult(intent, 1);
+                intent.putExtra("ID", newChar.getId());
+                startActivityForResult(intent, FROM_NEWITEM);
+            }
+        });
+
+        //搜索页面使用ListView和SimpleAdapter
+        searchListView = findViewById(R.id.searchlist);
+        searchAdapter = new SimpleAdapter(this, searchList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
+        searchAdapter.setViewBinder(new ImageView_Bitmap_Binder());
+        searchListView.setAdapter(searchAdapter);
+        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                int chose_id = (int) searchList.get(i).get("ID");
+                Intent intent = new Intent(MainActivity.this, detail.class);
+                intent.putExtra("ID", chose_id);
+                startActivityForResult(intent, FROM_DETAIL);
+            }
+        });
+        //搜索按钮
+        searchBtn = findViewById(R.id.searchBtn);
+        searchEdit = findViewById(R.id.search_edittext);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(searchListView.getVisibility() == View.GONE){
+                    List<character> guess = DataSupport.where("Name like ?", "%"+searchEdit.getText().toString()+"%").find(character.class);
+                    fillSearchList(guess);
+                    searchAdapter.notifyDataSetChanged();
+                    searchListView.setVisibility(View.VISIBLE);
+                    characters.setVisibility(View.GONE);
+                    searchBtn.setText("取消");
+                }
+                else{
+                    searchListView.setVisibility(View.GONE);
+                    characters.setVisibility(View.VISIBLE);
+                    searchBtn.setText("搜索");
+                }
             }
         });
     }//end onCreate
 
     //接受回传的信息
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == RESULT_OK){
-            if(requestCode == 1){
+            if(requestCode == FROM_NEWITEM){
                 int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
                 character newChar = DataSupport.find(character.class, newID);
                 Map<String, Object> temp = new LinkedHashMap<>();
-                temp.put("ID", newChar.getId());
+                temp.put("ID", newID);
                 temp.put("image", BitmapFactory.decodeByteArray(newChar.getImage(), 0, newChar.getImage().length));
                 temp.put("name", newChar.getName());
                 temp.put("Kingdoms", newChar.getKingdom());
                 CharacterList.add(temp);
-                simpleAdapter.notifyDataSetChanged();
+                characterAdapter.notifyDataSetChanged();
+            }
+            else if(requestCode == FROM_DETAIL){
+                int changeID = data.getIntExtra("ID", -1);
+                character changeChar = DataSupport.find(character.class, changeID);
+                int changeIndex = -1;
+                for(int i = 0; i < CharacterList.size(); i++)
+                {
+                    if((int)CharacterList.get(i).get("ID") == changeID){
+                        changeIndex = i;
+                        break;
+                    }
+                }
+                //Flag == true 修改, Flag == false 删除
+                if(data.getBooleanExtra("Flag", true)){
+                    Map<String, Object> temp = CharacterList.get(changeIndex);
+                    temp.put("ID", changeID);
+                    temp.put("image", BitmapFactory.decodeByteArray(changeChar.getImage(), 0, changeChar.getImage().length));
+                    temp.put("name", changeChar.getName());
+                    temp.put("Kingdoms", changeChar.getKingdom());
+                    characterAdapter.notifyDataSetChanged();
+                }
+                else{
+                    CharacterList.remove(changeIndex);
+                    characterAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
@@ -119,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
                 R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < ImageID.length; i++){
             Bitmap tmp_mp = BitmapFactory.decodeResource(getResources(), ImageID[i]);
             image_list[i] = tmp_mp;
         }
@@ -138,8 +214,10 @@ public class MainActivity extends AppCompatActivity {
         String[] birth = getResources().getStringArray(R.array.birth);
         String[] death = getResources().getStringArray(R.array.death);
         String[] native_place = getResources().getStringArray(R.array.native_place);
+        String[] nickname = getResources().getStringArray(R.array.nickname);
+        String[] profile = getResources().getStringArray(R.array.profile);
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < Name.length; i++){
             character temp_c = new character();
             temp_c.setName(Name[i]);
             temp_c.setKingdom(Kingdom[i]);
@@ -148,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
             temp_c.setDeath(death[i]);
             temp_c.setNative_place(native_place[i]);
             temp_c.setImage(bmTObyte(image_list[i]));
+            temp_c.setNickname(nickname[i]);
+            temp_c.setProfile(profile[i]);
             temp_c.save();
         }
     }
@@ -164,6 +244,18 @@ public class MainActivity extends AppCompatActivity {
             temp.put("name", Chs.get(i).getName());
             temp.put("Kingdoms", Chs.get(i).getKingdom());
             CharacterList.add(temp);
+        }
+    }
+    //搜索预测列表填充
+    private void fillSearchList(List<character> guess){
+        searchList.clear();
+        for(int i = 0; i < guess.size(); i++){
+            Map<String, Object> temp = new LinkedHashMap<>();
+            temp.put("ID", guess.get(i).getId());
+            temp.put("image", BitmapFactory.decodeByteArray(guess.get(i).getImage(), 0, guess.get(i).getImage().length));
+            temp.put("name", guess.get(i).getName());
+            temp.put("Kingdoms", guess.get(i).getKingdom());
+            searchList.add(temp);
         }
     }
 }

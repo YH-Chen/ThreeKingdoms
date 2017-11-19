@@ -4,27 +4,34 @@ import android.graphics.Bitmap;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by 61915 on 17/11/12.
  */
 
-public class character extends DataSupport {
+public class character extends DataSupport implements Serializable {
     private int id;
     private byte[] image;
+    private String nickname;
     private String Name;
     private String gender;
     private String Kingdom;
     private String native_place;
     private String birth;
     private String death;
+    private String profile;
 
     public int getId() {
         return id;
     }
 
     public byte[] getImage() {
-
         return image;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     public String getName() {
@@ -51,12 +58,21 @@ public class character extends DataSupport {
         return death;
     }
 
+    public String getProfile() {
+
+        return profile;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setName(String name) {
@@ -81,5 +97,9 @@ public class character extends DataSupport {
 
     public void setDeath(String death) {
         this.death = death;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }
