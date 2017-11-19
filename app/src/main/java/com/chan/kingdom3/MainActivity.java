@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -38,12 +39,18 @@ public class MainActivity extends AppCompatActivity {
     Button searchBtn;
     EditText searchEdit;
     FloatingActionButton addButton;
+    Bitmap WeiBM;
+    Bitmap ShuBM;
+    Bitmap WuBM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        WeiBM = BitmapFactory.decodeResource(getResources(), R.drawable.wei);
+        ShuBM = BitmapFactory.decodeResource(getResources(), R.drawable.shu);
+        WuBM = BitmapFactory.decodeResource(getResources(), R.drawable.wu);
         if(!DataSupport.isExist(character.class)){
             //把Resource转为bitmap的list
             fill_image_list();
@@ -63,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
         //词典主界面用ListView和SimpleAdapter
         characters = (ListView) findViewById(R.id.characterlist);
-        characterAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
+        characterAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "KingdomBM", "BG"},new int[]{R.id.character_image,R.id.name,R.id.kingdom_image,R.id.char_layout});
         characterAdapter.setViewBinder(new ImageView_Bitmap_Binder());
+//        characterAdapter.setViewBinder(new color_bg_Binder());
         characters.setAdapter(characterAdapter);
         characters.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -114,8 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
         //搜索页面使用ListView和SimpleAdapter
         searchListView = findViewById(R.id.searchlist);
-        searchAdapter = new SimpleAdapter(this, searchList,R.layout.characterlist_layout,new String[]{"image","name", "Kingdoms"},new int[]{R.id.character_image,R.id.name,R.id.Kingdoms});
+        searchAdapter = new SimpleAdapter(this, searchList,R.layout.characterlist_layout,new String[]{"image","name", "KingdomBM", "BG"},new int[]{R.id.character_image,R.id.name,R.id.kingdom_image, R.id.char_layout});
         searchAdapter.setViewBinder(new ImageView_Bitmap_Binder());
+//        searchAdapter.setViewBinder(new color_bg_Binder());
         searchListView.setAdapter(searchAdapter);
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -133,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(searchListView.getVisibility() == View.GONE){
-                    List<character> guess = DataSupport.where("Name like ?", "%"+searchEdit.getText().toString()+"%").find(character.class);
+                    List<character> guess = DataSupport.where("Name like ? or Kingdom like ?", "%"+searchEdit.getText().toString()+"%", "%"+searchEdit.getText().toString()+"%").find(character.class);
                     fillSearchList(guess);
                     searchAdapter.notifyDataSetChanged();
                     searchListView.setVisibility(View.VISIBLE);
@@ -157,10 +166,18 @@ public class MainActivity extends AppCompatActivity {
                 int newID = data.getIntExtra("ID", -1);//没有收到ID的intent就返回-1
                 character newChar = DataSupport.find(character.class, newID);
                 Map<String, Object> temp = new LinkedHashMap<>();
+                String Kingdom = newChar.getKingdom();
+                Bitmap KingdomBM = WeiBM;
+                int color = 0;
+                if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
+                else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
+                else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
                 temp.put("ID", newID);
                 temp.put("image", BitmapFactory.decodeByteArray(newChar.getImage(), 0, newChar.getImage().length));
                 temp.put("name", newChar.getName());
                 temp.put("Kingdoms", newChar.getKingdom());
+                temp.put("KingdomBM", KingdomBM);
+                temp.put("BG", color);
                 CharacterList.add(temp);
                 characterAdapter.notifyDataSetChanged();
             }
@@ -178,10 +195,18 @@ public class MainActivity extends AppCompatActivity {
                 //Flag == true 修改, Flag == false 删除
                 if(data.getBooleanExtra("Flag", true)){
                     Map<String, Object> temp = CharacterList.get(changeIndex);
+                    String Kingdom = changeChar.getKingdom();
+                    Bitmap KingdomBM = WeiBM;
+                    int color = 0;
+                    if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
+                    else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
+                    else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
                     temp.put("ID", changeID);
                     temp.put("image", BitmapFactory.decodeByteArray(changeChar.getImage(), 0, changeChar.getImage().length));
                     temp.put("name", changeChar.getName());
                     temp.put("Kingdoms", changeChar.getKingdom());
+                    temp.put("KingdomBM", KingdomBM);
+                    temp.put("BG", color);
                     characterAdapter.notifyDataSetChanged();
                 }
                 else{
@@ -231,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
             temp_c.save();
         }
     }
-    //商品列表在此初始化
+    //武将列表在此初始化
     private void initCharacterList()
     {
         int k = DataSupport.count("character");
@@ -239,10 +264,18 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < k; i++)
         {
             Map<String, Object> temp = new LinkedHashMap<>();
+            String Kingdom = Chs.get(i).getKingdom();
+            Bitmap KingdomBM = WeiBM;
+            int color = 0;
+            if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
+            else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
+            else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
             temp.put("ID", Chs.get(i).getId());
             temp.put("image", BitmapFactory.decodeByteArray(Chs.get(i).getImage(), 0, Chs.get(i).getImage().length));
             temp.put("name", Chs.get(i).getName());
             temp.put("Kingdoms", Chs.get(i).getKingdom());
+            temp.put("KingdomBM", KingdomBM);
+            temp.put("BG", color);
             CharacterList.add(temp);
         }
     }
@@ -251,10 +284,18 @@ public class MainActivity extends AppCompatActivity {
         searchList.clear();
         for(int i = 0; i < guess.size(); i++){
             Map<String, Object> temp = new LinkedHashMap<>();
+            String Kingdom = guess.get(i).getKingdom();
+            Bitmap KingdomBM = WeiBM;
+            int color = 0;
+            if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
+            else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
+            else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
             temp.put("ID", guess.get(i).getId());
             temp.put("image", BitmapFactory.decodeByteArray(guess.get(i).getImage(), 0, guess.get(i).getImage().length));
             temp.put("name", guess.get(i).getName());
             temp.put("Kingdoms", guess.get(i).getKingdom());
+            temp.put("KingdomBM", KingdomBM);
+            temp.put("BG", color);
             searchList.add(temp);
         }
     }

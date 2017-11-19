@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/char_layout">
 
     <ImageView
         android:id="@+id/character_image"
@@ -21,18 +22,19 @@
         android:gravity="left|center_vertical"
         android:textSize="20sp"
         android:textColor="@color/black"/>
-    <TextView
-        android:id="@+id/Kingdoms"
-        android:text="Kingdom"
-        android:ellipsize="none"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/character_image"
-        android:layout_alignBottom="@+id/character_image"
-        android:layout_alignTop="@+id/character_image"
-        android:gravity="right|center_vertical"
-        android:paddingRight="30dp"
-        android:textSize="20sp"
-        android:textColor="@color/black"/>
+
+    <ImageView
+        android:id="@+id/kingdom_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/name"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="23dp"
+        android:layout_weight="0"
+        android:gravity="center" />
+
+        />
+
 
 </RelativeLayout>

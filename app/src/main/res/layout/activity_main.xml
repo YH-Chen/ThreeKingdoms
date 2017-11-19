@@ -8,9 +8,9 @@ tools:context="com.chan.kingdom3.MainActivity">
 
     <EditText
         android:id="@+id/search_edittext"
-        android:layout_width="250dp"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:hint="搜索"
+        android:hint="搜索武将名/势力"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
