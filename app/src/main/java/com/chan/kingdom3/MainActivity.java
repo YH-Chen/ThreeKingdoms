@@ -216,19 +216,37 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private int calSampeSize(int height, int width){
+        int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
+        int minLen = Math.min(height, width); // 原图的最小边长
+        if(minLen > 300) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+            float ratio = (float)minLen / 300.0f; // 计算像素压缩比例
+            inSampleSize = (int)ratio;
+        }
+        return inSampleSize;
+    }
+
     //把Resources都换成bitmap
     void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
                 R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
         for(int i = 0; i < ImageID.length; i++){
-            Bitmap tmp_mp = BitmapFactory.decodeResource(getResources(), ImageID[i]);
+            //修改图片大小 from: http://blog.csdn.net/adam_ling/article/details/52346741
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true; // 只获取图片的大小信息，而不是将整张图片载入在内存中，避免内存溢出
+            BitmapFactory.decodeResource(getResources(), ImageID[i], options); // 解码出图片边长
+            int inSampleSize = calSampeSize(options.outHeight, options.outWidth); // 计算压缩比例
+            options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
+            options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
+            Bitmap tmp_mp = BitmapFactory.decodeResource(getResources(), ImageID[i], options); // 解码文件
             image_list[i] = tmp_mp;
         }
     }
     //bitmap转为字节流
     private byte[] bmTObyte(Bitmap bm){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
     }
     //填充数据库的初始值
