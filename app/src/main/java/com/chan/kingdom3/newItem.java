@@ -196,7 +196,7 @@ public class newItem extends AppCompatActivity {
     //bitmap转为字节流
     private byte[] bmTObyte(Bitmap bm){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
     }
 
