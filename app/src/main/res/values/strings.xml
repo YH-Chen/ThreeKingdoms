@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">Kingdom3</string>
+    <string name="app_name">三国杀</string>
     <string name="title_activity_detail">detail</string>
     <string name="appwidget_text">当前没有任何信息</string>
     <string name="add_widget">Add widget</string>
+    <string name="memb1">陈新堉</string>
+    <string name="memb2">陈~潇</string>
+    <string name="memb3">陈衍洪</string>
+    <string name="memb4">褚柏栋</string>
+    <string name="member">小组成员：</string>
     <string-array name="character_names">
         <item>刘备</item>
         <item>关羽</item>
@@ -12,8 +17,8 @@
         <item>曹操</item>
         <item>孙权</item>
         <item>司马懿</item>
-        <item>王朗</item>
-        <item>黄盖</item>
+        <item>小乔</item>
+        <item>貂蝉</item>
     </string-array>
     <string-array name="Kingdoms">
         <item>蜀</item>
@@ -24,20 +29,20 @@
         <item>魏</item>
         <item>吴</item>
         <item>魏</item>
-        <item>魏</item>
         <item>吴</item>
+        <item>群</item>
     </string-array>
     <string-array name="gender">
         <item>男</item>
         <item>男</item>
         <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
+        <item>男</item>
         <item>女</item>
-        <item>男</item>
-        <item>男</item>
-        <item>男</item>
-        <item>男</item>
-        <item>男</item>
-        <item>男</item>
+        <item>女</item>
     </string-array>
     <string-array name="native_place">
         <item>幽州涿郡涿(河北保定市涿州)</item>
@@ -48,8 +53,8 @@
         <item>豫州沛国谯(安徽亳州市亳县)</item>
         <item>扬州吴郡富春(浙江杭州市富阳)</item>
         <item>司隶河内郡温(河南焦作市温县西)</item>
-        <item>徐州东海郡郯(山东临沂市郯城县西北)</item>
-        <item>荆州零陵郡泉陵(湖南永州市零陵区)</item>
+        <item>扬州庐江郡皖(安徽安庆市潜山县)</item>
+        <item>\?</item>
     </string-array>
     <string-array name="birth">
         <item>161年</item>
@@ -72,32 +77,32 @@
         <item>220年</item>
         <item>252年</item>
         <item>251年</item>
-        <item>228年</item>
+        <item>\?</item>
         <item>\?</item>
     </string-array>
     <string-array name="nickname">
-        <item>刘备1</item>
-        <item>关羽1</item>
-        <item>张飞1</item>
-        <item>诸葛亮1</item>
-        <item>赵云1</item>
-        <item>曹操1</item>
-        <item>孙权1</item>
-        <item>司马懿1</item>
-        <item>王朗1</item>
-        <item>黄盖1</item>
+        <item>以德服人</item>
+        <item>义薄云天</item>
+        <item>嫉恶如仇</item>
+        <item>神机妙算</item>
+        <item>常胜将军</item>
+        <item>一代枭雄</item>
+        <item>乘马骑虎</item>
+        <item>机关算尽</item>
+        <item>矫情之花</item>
+        <item>闭月羞花</item>
     </string-array>
     <string-array name="profile">
-        <item>刘备2</item>
-        <item>关羽2</item>
-        <item>张飞2</item>
-        <item>诸葛亮2</item>
-        <item>赵云2</item>
-        <item>曹操2</item>
-        <item>孙权2</item>
-        <item>司马懿2</item>
-        <item>王朗2</item>
-        <item>黄盖2</item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
     </string-array>
 
     <string-array name="gender_spin">

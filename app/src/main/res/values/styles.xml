@@ -11,4 +11,10 @@
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="member">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

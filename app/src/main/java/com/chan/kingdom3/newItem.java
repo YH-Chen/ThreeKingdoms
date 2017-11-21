@@ -8,16 +8,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -146,9 +144,12 @@ public class newItem extends AppCompatActivity {
                 newItem.this.builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {}});
-                    newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        newItem.this.setResult(RESULT_CANCELED, intent);
+                        intent.putExtra("ID", curr_character.getId());
                         newItem.this.finish();
                     }
                 }).create().show();
@@ -249,7 +250,7 @@ public class newItem extends AppCompatActivity {
                     options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
                     options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
                     Bitmap bm = BitmapFactory.decodeFile(imagePath, options); // 解码文件
-                    Log.w("TAG", "size: " + bm.getByteCount() + " width: " + bm.getWidth() + " heigth:" + bm.getHeight()); // 输出图像数据
+//                    Log.w("TAG", "size: " + bm.getByteCount() + " width: " + bm.getWidth() + " heigth:" + bm.getHeight()); // 输出图像数据
                     headPhoto.setImageBitmap(bm);
                     imageInput = bm;
                     cursor.close();

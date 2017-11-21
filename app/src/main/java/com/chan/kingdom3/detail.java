@@ -94,8 +94,8 @@ public class detail extends AppCompatActivity {
         //人物信息
         name.setText(new_character.getName());
         nickname.setText(new_character.getNickname());
-        detail.setText("    " + new_character.getName() + "(" + new_character.getBirth() + " - " + new_character.getDeath() + "),"
-                + new_character.getGender() + ",属" + new_character.getKingdom() + "势力,"
+        detail.setText("      " + new_character.getName() + "（" + new_character.getBirth() + " - " + new_character.getDeath() + "），"
+                + new_character.getGender() + "，属" + new_character.getKingdom() + "势力，"
                 + new_character.getNative_place() + "人。\n" + new_character.getProfile());
     }
 

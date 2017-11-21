@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,15 +43,36 @@ public class MainActivity extends AppCompatActivity {
     Bitmap WeiBM;
     Bitmap ShuBM;
     Bitmap WuBM;
+    Bitmap QunBM;
+    FloatingActionButton bgmButton;
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mp = MediaPlayer.create(this, R.raw.bgm);
+        mp.start();
+        mp.setLooping(true);
+        bgmButton = (FloatingActionButton) findViewById(R.id.bgm);
+        bgmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mp.isPlaying()) {
+                    mp.pause();
+                    bgmButton.setImageResource(R.drawable.ic_stop);
+                } else {
+                    mp.start();
+                    bgmButton.setImageResource(R.drawable.ic_play);
+                }
+            }
+        });
+
         WeiBM = BitmapFactory.decodeResource(getResources(), R.drawable.wei);
         ShuBM = BitmapFactory.decodeResource(getResources(), R.drawable.shu);
         WuBM = BitmapFactory.decodeResource(getResources(), R.drawable.wu);
+        QunBM = BitmapFactory.decodeResource(getResources(), R.drawable.qun);
         if(!DataSupport.isExist(character.class)){
             //把Resource转为bitmap的list
             fill_image_list();
@@ -64,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         initCharacterList();
 
         //词典主界面的对话框
-        final String[] opItem = {"删除这个人物", "修改人物信息"};
+        final String[] opItem = {"斩首", "进修"};
         final AlertDialog.Builder characterlist_alertdialog = new AlertDialog.Builder(this);
-        characterlist_alertdialog.setTitle("操作人物词条");
+        characterlist_alertdialog.setTitle("调兵遣将");
 
         //词典主界面用ListView和SimpleAdapter
         characters = (ListView) findViewById(R.id.characterlist);
@@ -82,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(which == 0){
-                            Toast.makeText(getApplication(), CharacterList.get(pos).get("name")+"已移除", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplication(), "主公，"+CharacterList.get(pos).get("name")+"已斩首", Toast.LENGTH_LONG).show();
                             DataSupport.delete(character.class, (int)CharacterList.get(pos).get("ID"));
                             CharacterList.remove(pos);
                             characterAdapter.notifyDataSetChanged();
@@ -152,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     searchListView.setVisibility(View.GONE);
                     characters.setVisibility(View.VISIBLE);
-                    searchBtn.setText("搜索");
+                    searchBtn.setText("侦察");
                 }
             }
         });
@@ -167,11 +189,12 @@ public class MainActivity extends AppCompatActivity {
                 character newChar = DataSupport.find(character.class, newID);
                 Map<String, Object> temp = new LinkedHashMap<>();
                 String Kingdom = newChar.getKingdom();
-                Bitmap KingdomBM = WeiBM;
+                Bitmap KingdomBM = QunBM;
                 int color = 0;
-                if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
-                else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
-                else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
+                if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#D77814");}
+                else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFF500");}
+                else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B9D77D");}
+                else {KingdomBM = QunBM; color = Color.parseColor("#FFFFFF");}
                 temp.put("ID", newID);
                 temp.put("image", BitmapFactory.decodeByteArray(newChar.getImage(), 0, newChar.getImage().length));
                 temp.put("name", newChar.getName());
@@ -196,11 +219,12 @@ public class MainActivity extends AppCompatActivity {
                 if(data.getBooleanExtra("Flag", true)){
                     Map<String, Object> temp = CharacterList.get(changeIndex);
                     String Kingdom = changeChar.getKingdom();
-                    Bitmap KingdomBM = WeiBM;
+                    Bitmap KingdomBM = QunBM;
                     int color = 0;
-                    if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
-                    else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
-                    else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
+                    if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#D77814");}
+                    else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFF500");}
+                    else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B9D77D");}
+                    else {KingdomBM = QunBM; color = Color.parseColor("#FFFFFF");}
                     temp.put("ID", changeID);
                     temp.put("image", BitmapFactory.decodeByteArray(changeChar.getImage(), 0, changeChar.getImage().length));
                     temp.put("name", changeChar.getName());
@@ -214,6 +238,9 @@ public class MainActivity extends AppCompatActivity {
                     characterAdapter.notifyDataSetChanged();
                 }
             }
+        }
+        if(resultCode == RESULT_CANCELED){
+            DataSupport.delete(character.class, data.getIntExtra("ID", -1));
         }
     }
 
@@ -230,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
     //把Resources都换成bitmap
     void fill_image_list(){
         int[] ImageID = {R.drawable.liubei,R.drawable.guanyu, R.drawable.zhangfei, R.drawable.zhugeliang, R.drawable.zhaoyun,
-                R.drawable.caochao, R.drawable.sunquan, R.drawable.simayi, R.drawable.wanglang, R.drawable.huangai};
+                R.drawable.caocao, R.drawable.sunquan, R.drawable.simayi, R.drawable.xiaoqiao, R.drawable.diaochan};
         for(int i = 0; i < ImageID.length; i++){
             //修改图片大小 from: http://blog.csdn.net/adam_ling/article/details/52346741
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -283,11 +310,14 @@ public class MainActivity extends AppCompatActivity {
         {
             Map<String, Object> temp = new LinkedHashMap<>();
             String Kingdom = Chs.get(i).getKingdom();
-            Bitmap KingdomBM = WeiBM;
+            Bitmap KingdomBM = QunBM;
             int color = 0;
-            if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
-            else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
-            else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
+            if(Kingdom != null) {
+                if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#D77814");}
+                else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFF500");}
+                else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B9D77D");}
+                else {KingdomBM = QunBM; color = Color.parseColor("#FFFFFF");}
+            }
             temp.put("ID", Chs.get(i).getId());
             temp.put("image", BitmapFactory.decodeByteArray(Chs.get(i).getImage(), 0, Chs.get(i).getImage().length));
             temp.put("name", Chs.get(i).getName());
@@ -303,11 +333,14 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < guess.size(); i++){
             Map<String, Object> temp = new LinkedHashMap<>();
             String Kingdom = guess.get(i).getKingdom();
-            Bitmap KingdomBM = WeiBM;
+            Bitmap KingdomBM = QunBM;
             int color = 0;
-            if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#FF7F00");}
-            else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFD700");}
-            else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B3EE3A");}
+            if(Kingdom != null) {
+                if(Kingdom.equals("魏")){ KingdomBM = WeiBM; color = Color.parseColor("#D77814");}
+                else if(Kingdom.equals("蜀")){ KingdomBM = ShuBM; color = Color.parseColor("#FFF500");}
+                else if(Kingdom.equals("吴")){ KingdomBM = WuBM; color = Color.parseColor("#B9D77D");}
+                else {KingdomBM = QunBM; color = Color.parseColor("#FFFFFF");}
+            }
             temp.put("ID", guess.get(i).getId());
             temp.put("image", BitmapFactory.decodeByteArray(guess.get(i).getImage(), 0, guess.get(i).getImage().length));
             temp.put("name", guess.get(i).getName());
