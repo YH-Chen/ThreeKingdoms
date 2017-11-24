@@ -69,7 +69,7 @@ public class AppStart extends Activity {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 Log.d("distance", String.valueOf(e2.getX() - e1.getX()));
                 if (e1.getX() - e2.getX() > 500) {
-                    Toast.makeText(AppStart.this, "主公，末将已守候多时", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AppStart.this, "主公，末将已恭候多时", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setClass(AppStart.this, MainActivity.class);
                     startActivity(intent);

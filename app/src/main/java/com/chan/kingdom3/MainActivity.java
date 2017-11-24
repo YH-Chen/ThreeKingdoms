@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         characters = (ListView) findViewById(R.id.characterlist);
         characterAdapter = new SimpleAdapter(this, CharacterList,R.layout.characterlist_layout,new String[]{"image","name", "KingdomBM", "BG"},new int[]{R.id.character_image,R.id.name,R.id.kingdom_image,R.id.char_layout});
         characterAdapter.setViewBinder(new ImageView_Bitmap_Binder());
-//        characterAdapter.setViewBinder(new color_bg_Binder());
         characters.setAdapter(characterAdapter);
         characters.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -146,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
         searchListView = findViewById(R.id.searchlist);
         searchAdapter = new SimpleAdapter(this, searchList,R.layout.characterlist_layout,new String[]{"image","name", "KingdomBM", "BG"},new int[]{R.id.character_image,R.id.name,R.id.kingdom_image, R.id.char_layout});
         searchAdapter.setViewBinder(new ImageView_Bitmap_Binder());
-//        searchAdapter.setViewBinder(new color_bg_Binder());
         searchListView.setAdapter(searchAdapter);
         searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

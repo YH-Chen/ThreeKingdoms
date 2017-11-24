@@ -1,5 +1,6 @@
 package com.chan.kingdom3;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,12 +28,10 @@ public class detail extends AppCompatActivity {
     private TextView nickname;
     private TextView name;
     private TextView detail;
-    private TextView jianjie;
     private FloatingActionButton back;
     private FloatingActionButton toEdit;
     private FloatingActionButton delete;
     private AlertDialog.Builder builder;
-    private Typeface nickType, nameType, detailType;
     private ImageView image;
     int wei, shu, wu, qun;
 
@@ -58,15 +57,15 @@ public class detail extends AppCompatActivity {
         nickname = (TextView)findViewById(R.id.detail_nick);
         name = (TextView)findViewById(R.id.detail_name);
         detail = (TextView)findViewById(R.id.detail_detail);
-        jianjie = (TextView)findViewById(R.id.detail_jianjie);
+        TextView jianjie = (TextView) findViewById(R.id.detail_jianjie);
         back = (FloatingActionButton)findViewById(R.id.detail_back);
         toEdit = (FloatingActionButton)findViewById(R.id.detail_to_edit);
         delete = (FloatingActionButton)findViewById(R.id.detail_delete);
         image = (ImageView)findViewById(R.id.detail_image);
 
-        nickType = Typeface.createFromAsset(getAssets(), "nickname.TTF");
-        nameType = Typeface.createFromAsset(getAssets(), "name.TTF");
-        detailType = Typeface.createFromAsset(getAssets(), "FZLBJW.TTF");
+        Typeface nickType = Typeface.createFromAsset(getAssets(), "nickname.TTF");
+        Typeface nameType = Typeface.createFromAsset(getAssets(), "name.TTF");
+        Typeface detailType = Typeface.createFromAsset(getAssets(), "FZLBJW.TTF");
         builder = new AlertDialog.Builder(this);
 
         nickname.setTypeface(nickType);
@@ -79,6 +78,7 @@ public class detail extends AppCompatActivity {
         qun = R.mipmap.qun;
     }
 
+    @SuppressLint("SetTextI18n")
     private void set(character new_character){
         //设置背景
         if(new_character.getKingdom().equals("魏")) BG.setBackgroundResource(wei);
@@ -128,7 +128,8 @@ public class detail extends AppCompatActivity {
                 detail.this.builder.setMessage("确定要删除该武将吗？该操作不可撤回。");
                 detail.this.builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {}});
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
                 detail.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

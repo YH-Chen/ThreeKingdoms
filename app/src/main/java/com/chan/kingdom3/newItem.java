@@ -187,6 +187,7 @@ public class newItem extends AppCompatActivity {
         setContentView(R.layout.activity_new_item);
 
         Bundle extras = this.getIntent().getExtras();
+        assert extras != null;
         item_id = extras.getInt("ID");
         curr_character = DataSupport.find(character.class, item_id);
         initial();
@@ -298,6 +299,9 @@ public class newItem extends AppCompatActivity {
         newItem.this.builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent();
+                newItem.this.setResult(RESULT_CANCELED, intent);
+                intent.putExtra("ID", curr_character.getId());
                 newItem.this.finish();
             }
         }).create().show();
