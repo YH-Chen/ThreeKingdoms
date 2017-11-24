@@ -44,7 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
-            android:text="123"
+            android:text="男"
+            android:textSize="15sp"
             android:background="@drawable/edit_bg" />
 
 
@@ -66,6 +67,7 @@
             android:layout_weight="5"
             android:gravity="center"
             android:text="456"
+            android:textSize="15sp"
             android:background="@drawable/edit_bg" />
 
     </LinearLayout>
@@ -97,6 +99,7 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@drawable/edit_bg"
+            android:spinnerMode="dialog"
             android:gravity="center"
             android:text="123"
             android:textAlignment="center"
@@ -120,6 +123,7 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@drawable/edit_bg"
+            android:spinnerMode="dialog"
             android:entries="@array/kingdom_spin"
             android:textAlignment="center"
             android:gravity="center" />
@@ -152,6 +156,7 @@
             android:layout_weight="7"
             android:gravity="center"
             android:text="456"
+            android:textSize="15sp"
             android:background="@drawable/edit_bg" />
 
     </LinearLayout>
@@ -184,6 +189,7 @@
             android:layout_weight="3"
             android:gravity="center"
             android:text="123"
+            android:textSize="15sp"
             android:background="@drawable/edit_bg" />
 
         <TextView
@@ -202,6 +208,7 @@
             android:layout_weight="3"
             android:gravity="center"
             android:text="123"
+            android:textSize="15sp"
             android:background="@drawable/edit_bg" />
 
     </LinearLayout>
@@ -227,7 +234,9 @@
         android:layout_marginTop="8dp"
         android:layout_weight="5"
         android:background="@drawable/edit_bg"
-        android:textSize="10sp"
+        android:textSize="15sp"
+        android:gravity="start"
+        android:lineSpacingMultiplier="1.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detail_text" />
